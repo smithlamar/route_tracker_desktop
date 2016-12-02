@@ -5,7 +5,7 @@ Create custom routes of CTA buses and trains. View arrival times for each stop a
 
 * Most of the heavy lifting is currently handled in the controller, which realistically needs to be split up into smaller controllers/handlers. However, for a quick prototype, the current orginization is good enough to get to a working version of the app. Comments are a little on the rough side at the moment, but should be thorough (and accurate) enough in most of the source to have an idea of what's going on.
 
-* A key for the Bus Tracker and Train Tracker API's is required for requests to work. Keys contained in this public source have been redacted.
+* Keys for the Bus Tracker and Train Tracker APIs are required for requests to work. Keys contained in this public source have been redacted.
 
 * Gson is used for JSON parsing. It is declared as dependency in the Maven POM.
 
