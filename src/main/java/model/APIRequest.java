@@ -33,7 +33,7 @@ public class APIRequest {
     /**
      *
      */
-    public static final String API_KEY = "?key=***REMOVED***";
+    public static final String API_KEY = "?key=";
 
     /**
      *
