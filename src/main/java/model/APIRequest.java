@@ -31,9 +31,10 @@ public class APIRequest {
     // Request compnents
 
     /**
-     *
+     * This bit of code will eventually be altered to have requests to the API fire from
+     * my server for the purposes of key security.
      */
-    public static final String API_KEY = "?key=";
+    public static final String API_KEY = "?key=***REMOVED***";
 
     /**
      *

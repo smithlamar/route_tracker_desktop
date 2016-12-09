@@ -26,13 +26,12 @@ import java.util.Date;
 public class BusLinesModel {
 
     // Constants
-
     /**
      * Path to a JSON where downloaded bus lines are stored. This is rebuilt
      * automatically should the file be deleted. It also updated every 2 weeks
      * (roughly).
      */
-    public static final File BUS_LINES_PATH = new File("resources.bus_line.json");
+    public static final File BUS_LINES_PATH = new File("bus_lines.json");
 
     /**
      * Proper type name to pass to Gson when building or grabbing a Json file.
@@ -52,14 +51,17 @@ public class BusLinesModel {
             try {
                 loadBusLines();
             } catch (FileNotFoundException ex) {
-                System.out.println("Could not find" + BUS_LINES_PATH + "Attempting download.");
+                System.out.println("loadBusLines() Could not find" + BUS_LINES_PATH + "Attempting download: " + ex);
+            } catch (IOException ex) {
+                System.out.println("loadBusLines() IOException: " + ex);
             }
         } else {
             try {
                 refreshBusLines();
+            } catch (MalformedURLException ex) {
+                System.out.println("refreshBusLines() bad URL: " + ex);
             } catch (IOException ex) {
-                System.out.println("Could not download new bus list or load from"
-                        + "file." + ex);
+                System.out.println("refreshBusLines() Could not download new bus list: " + ex);
             }
         }
     }
@@ -94,9 +96,10 @@ public class BusLinesModel {
      *
      * @throws FileNotFoundException
      */
-    public void loadBusLines() throws FileNotFoundException {
-        BufferedReader in = new BufferedReader(new FileReader(BUS_LINES_PATH));
-        busLines = new Gson().fromJson(in, BUS_LINES_TYPE);
+    public void loadBusLines() throws FileNotFoundException, IOException {
+        try (BufferedReader in = new BufferedReader(new FileReader(BUS_LINES_PATH))) {
+            busLines = new Gson().fromJson(in, BUS_LINES_TYPE);
+        }
     }
 
     /**
@@ -111,9 +114,14 @@ public class BusLinesModel {
     }
 
     private void saveBusLines() throws IOException {
-        Files.deleteIfExists(BUS_LINES_PATH.toPath());
-        BufferedWriter writer = new BufferedWriter(new FileWriter(BUS_LINES_PATH));
-        writer.append(new Gson().toJson(busLines, BUS_LINES_TYPE));
-        writer.flush();
+        System.out.println("saveBusLines() Saving buslines...");
+        try {
+            Files.deleteIfExists(BUS_LINES_PATH.toPath());
+        } catch (IOException e) {
+            System.out.println("saveBusLines() Failed to delete " + BUS_LINES_PATH + " prior to saving: " + e);
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(BUS_LINES_PATH))) {
+            writer.append(new Gson().toJson(busLines, BUS_LINES_TYPE));
+        }
     }
 }

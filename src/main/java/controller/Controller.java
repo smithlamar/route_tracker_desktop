@@ -21,8 +21,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -45,7 +43,7 @@ public class Controller implements ActionListener, ListSelectionListener, ItemLi
 
     private BusLinesModel busLinesModel;
     private AddedStopsModel addedStops;
-    private MyRoutesModel myRoutes;
+    private MyRoutesModel myRoutesModel;
     private HomeUI homeUI;
     private AddRouteUI addRouteUI;
 
@@ -71,7 +69,9 @@ public class Controller implements ActionListener, ListSelectionListener, ItemLi
      * stops window in the AddRouteUI.
      */
     public void initMyRoutesModel() {
-        myRoutes = new MyRoutesModel();
+        myRoutesModel = new MyRoutesModel();
+        myRoutesModel.loadMyRoutes();
+
     }
 
     /**
@@ -80,6 +80,7 @@ public class Controller implements ActionListener, ListSelectionListener, ItemLi
     public void initHomeUI() {
         homeUI = new HomeUI();
         homeUI.setVisible(true);
+        homeUI.getLstRoutes().setModel(myRoutesModel.getMyRoutes());
 
         homeUI.addBtnAddRouteListener(this);
         homeUI.addLstRoutesListener(this);
@@ -114,7 +115,7 @@ public class Controller implements ActionListener, ListSelectionListener, ItemLi
         addRouteUI.addTxtFieldRouteNameListener(this);
         addRouteUI.addBtnSaveRouteListener(this);
 
-        initializeBusSelectors();
+        initBusSelectors();
 
     }
 
@@ -122,7 +123,7 @@ public class Controller implements ActionListener, ListSelectionListener, ItemLi
      * Initialize the list of elements from each of the BusLinesModel properties
      * into their related selectors.
      */
-    private void initializeBusSelectors() {
+    private void initBusSelectors() {
         // Bus names
         addRouteUI.getCmbBusSelector().setModel(new DefaultComboBoxModel<>(busLinesModel.getBusLines()));
 
@@ -172,14 +173,14 @@ public class Controller implements ActionListener, ListSelectionListener, ItemLi
              */
             RouteStop rtstp = new RouteStop(selectedBus.toString(), selectedBus.getRouteColor(), selectedDirection, selectedStop);
 
-            boolean isDuplicate = false;
+            boolean isDuplicateStop = false;
             for (RouteStop routeStop : addedStops.toArray()) {
                 if (rtstp.toString().equals(routeStop.toString())) {
-                    isDuplicate = true;
+                    isDuplicateStop = true;
                     break;
                 }
             }
-            if (!isDuplicate) {
+            if (!isDuplicateStop) {
                 addedStops.getAddedStops().addElement(rtstp);
                 addRouteUI.getLstStopsAdded().setModel((addedStops.getAddedStops()));
             } else {
@@ -197,26 +198,37 @@ public class Controller implements ActionListener, ListSelectionListener, ItemLi
                 // @TODO Convert exception print to proper message window.
                 System.out.println("Please add at least 1 stop to your route.");
             } else // Save new route if routeName is not empty.
-            {
-                if (!routeName.isEmpty()) {
-                    myRoutes.getMyRoutes().addElement(new Route(routeName, addedStops.toArray()));
-                    try {
-                        myRoutes.saveRoutes();
-                    } catch (IOException ex) {
-                        System.out.println("Error saving myRoutes: " + ex);
+             if (!routeName.isEmpty()) {
+                    boolean isDuplicateRoute = false;
+                    for (Route route : myRoutesModel.toArray()) {
+                        if (route.toString().equals(routeName)) {
+                            isDuplicateRoute = true;
+                            break;
+                        }
                     }
-                    // Update the HomeUI with the new route.
-                    homeUI.getLstRoutes().setModel(myRoutes.getMyRoutes());
+                    if (isDuplicateRoute) {
+                        // @TODO turn this into a small message dialog.
+                        System.out.println("A route with this name already exists.");
+                    } else {
 
-                    // Clean up and hide addRouteUI.
-                    addedStops.getAddedStops().clear();
-                    addRouteUI.getLstStopsAdded().setModel(addedStops.getAddedStops());
-                    addRouteUI.dispose();
+                        myRoutesModel.getMyRoutes().addElement(new Route(routeName, addedStops.toArray()));
+                        try {
+                            myRoutesModel.saveMyRoutes();
+                        } catch (IOException ex) {
+                            System.out.println("saveMYRoutes() Error saving myRoutes: " + ex);
+                        }
+                        // Update the HomeUI with the new route.
+                        homeUI.getLstRoutes().setModel(myRoutesModel.getMyRoutes());
+
+                        // Clean up and hide addRouteUI.
+                        addedStops.getAddedStops().clear();
+                        addRouteUI.getLstStopsAdded().setModel(addedStops.getAddedStops());
+                        addRouteUI.dispose();
+                    }
                 } else {
                     // @TODO Convert exception print to proper message window.
                     System.out.println("Please give your new route a name.");
                 }
-            }
         }
 
     }
