@@ -115,32 +115,32 @@ public class Controller implements ActionListener, ListSelectionListener, ItemLi
         addRouteUI.addTxtFieldRouteNameListener(this);
         addRouteUI.addBtnSaveRouteListener(this);
 
-        initBusSelectors();
-
+        // Set Bus names
+        addRouteUI.getCmbBusSelector().setModel(new DefaultComboBoxModel<>(busLinesModel.getBusLines()));
+        updateBusDirections();
+        updateBusStops();
     }
 
     /**
      * Initialize the list of elements from each of the BusLinesModel properties
      * into their related selectors.
      */
-    private void initBusSelectors() {
-        // Bus names
-        addRouteUI.getCmbBusSelector().setModel(new DefaultComboBoxModel<>(busLinesModel.getBusLines()));
-
-        // Directions
+    private void updateBusDirections() {
         addRouteUI.getCmbBusDirectionSelector().setModel(
                 new DefaultComboBoxModel<>(
-                        ((BusLine) addRouteUI.getCmbBusSelector().getModel().getSelectedItem()).getDirections()
+                        ((BusLine) addRouteUI.getCmbBusSelector().getModel().
+                        getSelectedItem()).getDirections()
                 )
         );
+    }
 
-        // Stops
+    private void updateBusStops() {
         addRouteUI.getCmbStopSelector().setModel(
                 new DefaultComboBoxModel<>(
-                        ((Direction) addRouteUI.getCmbBusDirectionSelector().getModel().getSelectedItem()).getStops()
+                        ((Direction) addRouteUI.getCmbBusDirectionSelector().getModel().
+                        getSelectedItem()).getStops()
                 )
         );
-
     }
 
     /**
@@ -198,7 +198,8 @@ public class Controller implements ActionListener, ListSelectionListener, ItemLi
                 // @TODO Convert exception print to proper message window.
                 System.out.println("Please add at least 1 stop to your route.");
             } else // Save new route if routeName is not empty.
-             if (!routeName.isEmpty()) {
+            {
+                if (!routeName.isEmpty()) {
                     boolean isDuplicateRoute = false;
                     for (Route route : myRoutesModel.toArray()) {
                         if (route.toString().equals(routeName)) {
@@ -229,6 +230,7 @@ public class Controller implements ActionListener, ListSelectionListener, ItemLi
                     // @TODO Convert exception print to proper message window.
                     System.out.println("Please give your new route a name.");
                 }
+            }
         }
 
     }
@@ -245,17 +247,22 @@ public class Controller implements ActionListener, ListSelectionListener, ItemLi
 
         // Update addRouteUI Directions Selector
         if (e.getSource().hashCode() == addRouteUI.getCmbBusSelector().hashCode()) {
-            BusLine busLineSelection;
-            busLineSelection = (BusLine) addRouteUI.getCmbBusSelector().getModel().getSelectedItem();
-            Direction[] busLineSelectionDirections = busLineSelection.getDirections();
-            addRouteUI.getCmbBusDirectionSelector().setModel(new DefaultComboBoxModel<>(busLineSelectionDirections));
-        }
+            updateBusDirections();
+//            BusLine busLineSelection;
+//            busLineSelection = (BusLine) addRouteUI.getCmbBusSelector().getModel().getSelectedItem();
+//            Direction[] busLineSelectionDirections = busLineSelection.getDirections();
+//            addRouteUI.getCmbBusDirectionSelector().setModel(new DefaultComboBoxModel<>(busLineSelectionDirections));
+//        }
 
-        // Update addRouteUI Stops Selector
+            // Update addRouteUI Stops Selector
+            updateBusStops();
+//        if (e.getSource().hashCode() == addRouteUI.getCmbBusDirectionSelector().hashCode()) {
+//            Direction directionSelected = (Direction) addRouteUI.getCmbBusDirectionSelector().getModel().getSelectedItem();
+//            Stop[] directionStops = directionSelected.getStops();
+//            addRouteUI.getCmbStopSelector().setModel(new DefaultComboBoxModel<>(directionStops));
+        }
         if (e.getSource().hashCode() == addRouteUI.getCmbBusDirectionSelector().hashCode()) {
-            Direction directionSelected = (Direction) addRouteUI.getCmbBusDirectionSelector().getModel().getSelectedItem();
-            Stop[] directionStops = directionSelected.getStops();
-            addRouteUI.getCmbStopSelector().setModel(new DefaultComboBoxModel<>(directionStops));
+            updateBusStops();
         }
     }
 

@@ -88,7 +88,8 @@ public class MyRoutesModel {
         try (BufferedReader in = new BufferedReader(new FileReader(MY_ROUTES_PATH))) {
             myRoutes = new Gson().fromJson(in, MY_ROUTES_TYPE);
         } catch (IOException ex) {
-            System.out.println("loadMyRoutes() Could not load my routes: " + ex);
+            System.out.println("loadMyRoutes() No my routes file present - exception: " + ex);
+            System.out.println(MY_ROUTES_PATH + " will be rebuilt when a new route is created.");
         }
     }
 
