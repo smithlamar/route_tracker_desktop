@@ -198,8 +198,7 @@ public class Controller implements ActionListener, ListSelectionListener, ItemLi
                 // @TODO Convert exception print to proper message window.
                 System.out.println("Please add at least 1 stop to your route.");
             } else // Save new route if routeName is not empty.
-            {
-                if (!routeName.isEmpty()) {
+             if (!routeName.isEmpty()) {
                     boolean isDuplicateRoute = false;
                     for (Route route : myRoutesModel.toArray()) {
                         if (route.toString().equals(routeName)) {
@@ -230,7 +229,6 @@ public class Controller implements ActionListener, ListSelectionListener, ItemLi
                     // @TODO Convert exception print to proper message window.
                     System.out.println("Please give your new route a name.");
                 }
-            }
         }
 
     }
@@ -248,18 +246,9 @@ public class Controller implements ActionListener, ListSelectionListener, ItemLi
         // Update addRouteUI Directions Selector
         if (e.getSource().hashCode() == addRouteUI.getCmbBusSelector().hashCode()) {
             updateBusDirections();
-//            BusLine busLineSelection;
-//            busLineSelection = (BusLine) addRouteUI.getCmbBusSelector().getModel().getSelectedItem();
-//            Direction[] busLineSelectionDirections = busLineSelection.getDirections();
-//            addRouteUI.getCmbBusDirectionSelector().setModel(new DefaultComboBoxModel<>(busLineSelectionDirections));
-//        }
 
             // Update addRouteUI Stops Selector
             updateBusStops();
-//        if (e.getSource().hashCode() == addRouteUI.getCmbBusDirectionSelector().hashCode()) {
-//            Direction directionSelected = (Direction) addRouteUI.getCmbBusDirectionSelector().getModel().getSelectedItem();
-//            Stop[] directionStops = directionSelected.getStops();
-//            addRouteUI.getCmbStopSelector().setModel(new DefaultComboBoxModel<>(directionStops));
         }
         if (e.getSource().hashCode() == addRouteUI.getCmbBusDirectionSelector().hashCode()) {
             updateBusStops();

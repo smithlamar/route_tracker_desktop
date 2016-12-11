@@ -28,7 +28,7 @@ import model.BusLine.Stop;
  */
 public class APIRequest {
 
-    // Request compnents
+    // Request components
 
     /**
      * This bit of code will eventually be altered to have requests to the API fire from
@@ -37,17 +37,22 @@ public class APIRequest {
     public static final String API_KEY = "?key=***Removed***";
 
     /**
-     *
+     * This is the base component of the API's request URL. The key and any
+     * parameters that follow it are appended to the end of this string.
      */
     public static final String BUSTIME_REQUEST_BASE = "http://ctabustracker.com/bustime/api/v2/";
 
     /**
-     *
+     * This is a parameter that can be added to the request to get back a JSON
+     * response instead of XML. This utility class has methods for handling the
+     * parsing of JSON responses into equivalent objects. XML parsing has not
+     * been implemented.
      */
     public static final String F_JSON = "&format=json";
 
     /**
-     *
+     * The route parameter indicates a specific route for those requests that
+     * require one as input.
      */
     public static final String RT = "&rt=";
 
@@ -55,7 +60,10 @@ public class APIRequest {
      *
      */
     public static final String DIR = "&dir=";
+    
+    public static final String STPID = "&stpid=";
 
+    
     // Request types
 
     /**
@@ -72,6 +80,11 @@ public class APIRequest {
      *
      */
     public static final String GET_BUS_STOPS = "getstops";
+    
+    /**
+     *
+     */
+    public static final String GET_BUS_PATTERNS = "getpatterns";
 
     // Properties
     private final URL request;
