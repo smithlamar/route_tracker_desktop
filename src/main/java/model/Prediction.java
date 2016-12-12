@@ -10,10 +10,12 @@ package model;
  * @author Araba
  */
 public class Prediction {
+
     private String tmstmp;
     private String stpnm;
     private String rtdir;
     private boolean dly;
+    private int prdctdn;
 
     /**
      * @return the tmstmp
@@ -42,6 +44,16 @@ public class Prediction {
     public boolean isDly() {
         return dly;
     }
+
+    /**
+     * @return the prdctdn
+     */
+    public int getPrdctdn() {
+        return prdctdn;
+    }
+
+    @Override
+    public String toString() {
+        return stpnm + " " + rtdir + " - " + prdctdn + "m";
+    }
 }
-
-

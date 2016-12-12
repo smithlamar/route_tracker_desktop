@@ -45,13 +45,4 @@ public class Route {
     public RouteStop[] getRouteStops() {
         return routeStops;
     }
-
-    public void setRouteStops(RouteStop[] routeStops) {
-        this.routeStops = routeStops;
-    }
-    
-    
-    
-    
-           
 }

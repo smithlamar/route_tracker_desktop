@@ -34,7 +34,7 @@ public class APIRequest {
      * This bit of code will eventually be altered to have requests to the API fire from
      * my server for the purposes of key security.
      */
-    public static final String API_KEY = "?key=***Removed***";
+    public static final String API_KEY = "?key="; // ***Removed***
 
     /**
      * This is the base component of the API's request URL. The key and any
@@ -62,6 +62,8 @@ public class APIRequest {
     public static final String DIR = "&dir=";
     
     public static final String STPID = "&stpid=";
+    
+    public static final String TOP = "&top="; // Number of predictions to be returned from GET_BUS_PREDICTIONS.
 
     
     // Request types
@@ -84,7 +86,7 @@ public class APIRequest {
     /**
      *
      */
-    public static final String GET_BUS_PATTERNS = "getpatterns";
+    public static final String GET_BUS_PREDICTIONS = "getpredictions";
 
     // Properties
     private final URL request;
@@ -213,6 +215,22 @@ public class APIRequest {
         return new Gson().fromJson(stopsElement, stopsListType);        
     }
 
+
+    public Prediction[] parsePredictions() {
+        JsonElement prdElement = responseBody.getAsJsonObject("bustime-response").get("prd");
+
+        // Convert the JsonElement object in to a Json string using gson.
+        Gson gson = new Gson();
+        gson.toJson(prdElement);
+
+        // Find the proper type name of the Direction array list;
+        Type prdArrayType = new TypeToken<Prediction[]>() {
+        }.getType();
+
+        // Use gson to convert from Json to the array of Direction objects.
+        return new Gson().fromJson(prdElement, prdArrayType);
+    }
+    
     /**
      *
      * @return
