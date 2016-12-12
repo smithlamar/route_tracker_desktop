@@ -34,6 +34,5 @@ public class Main {
         controller.initAddRouteUI();
         
         // @TODO build TrainLinesModel
-        // @TODO build home screen RouteDisplayModel
     }
 }

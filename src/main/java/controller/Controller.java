@@ -21,7 +21,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
+import java.util.Arrays;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import model.AddedStopsModel;
@@ -30,6 +32,7 @@ import model.BusLine.Direction;
 import model.BusLine.Stop;
 import model.BusLinesModel;
 import model.MyRoutesModel;
+import model.Prediction;
 import model.Route;
 import model.RouteStop;
 import view.AddRouteUI;
@@ -144,12 +147,13 @@ public class Controller implements ActionListener, ListSelectionListener, ItemLi
     }
 
     /**
-     * All button messages from the views this controller is registered with
-     * flow through this method.
+     * All button/list actions from the views this controller is registered with
+     * flow through the following methods.
      *
-     * @TODO Push each message to a separate handler that contains the static
+     * @TODO Push each handled event to a separate handler that contains the
      * utility methods needed to handle each action instead of having every
      * single action tested and handled within the main controller class.
+     * 
      * @param e The action event object created by the caller.
      */
     @Override
@@ -171,7 +175,7 @@ public class Controller implements ActionListener, ListSelectionListener, ItemLi
             * Create a RouteStop object representing the bus line, direction,
             * and stop combination selected in the UI.
              */
-            RouteStop rtstp = new RouteStop(selectedBus.toString(), selectedBus.getRouteColor(), selectedDirection, selectedStop);
+            RouteStop rtstp = new RouteStop(selectedBus.getRouteCode(), selectedBus.toString(), selectedBus.getRouteColor(), selectedDirection, selectedStop);
 
             boolean isDuplicateStop = false;
             for (RouteStop routeStop : addedStops.toArray()) {
@@ -195,10 +199,11 @@ public class Controller implements ActionListener, ListSelectionListener, ItemLi
 
             // Check that stops have actually been added to the route.
             if (addedStops.getAddedStops().isEmpty()) {
-                // @TODO Convert exception print to proper message window.
+                // @TODO Convert print msg to proper message dialogue.
                 System.out.println("Please add at least 1 stop to your route.");
             } else // Save new route if routeName is not empty.
-             if (!routeName.isEmpty()) {
+            {
+                if (!routeName.isEmpty()) {
                     boolean isDuplicateRoute = false;
                     for (Route route : myRoutesModel.toArray()) {
                         if (route.toString().equals(routeName)) {
@@ -226,9 +231,10 @@ public class Controller implements ActionListener, ListSelectionListener, ItemLi
                         addRouteUI.dispose();
                     }
                 } else {
-                    // @TODO Convert exception print to proper message window.
+                    // @TODO Convert print msg to proper message dialogue.
                     System.out.println("Please give your new route a name.");
                 }
+            }
         }
 
     }
@@ -237,6 +243,25 @@ public class Controller implements ActionListener, ListSelectionListener, ItemLi
     public void valueChanged(ListSelectionEvent e) {
         System.out.println("List selection changed on: " + e.getSource().toString());
 
+        // HomeUI - Display times
+        if (e.getSource().hashCode() == homeUI.getLstRoutes().hashCode()) {
+
+            Route selectedRoute = homeUI.getLstRoutes().getSelectedValue();
+            DefaultListModel times = new DefaultListModel();
+            for (RouteStop routeStop : selectedRoute.getRouteStops()) {
+                try {
+                    Prediction[] prds = routeStop.getTimes();
+                    System.out.println("Times Json: " + Arrays.toString(routeStop.getTimes()));
+                    for (Prediction prd : prds) {
+                        times.addElement(prd.toString());
+                    }
+                    homeUI.getLstTimes().setModel(times);
+                } catch (Exception ex) {
+                    System.out.println("routeStop.getTimes() threw exception: " + ex);
+                }
+            }
+
+        }
     }
 
     @Override
@@ -253,26 +278,5 @@ public class Controller implements ActionListener, ListSelectionListener, ItemLi
         if (e.getSource().hashCode() == addRouteUI.getCmbBusDirectionSelector().hashCode()) {
             updateBusStops();
         }
-    }
-
-    /**
-     * @return the busLinesModel
-     */
-    public BusLinesModel getBusLinesModel() {
-        return busLinesModel;
-    }
-
-    /**
-     * @return the homeUI
-     */
-    public HomeUI getHomeUI() {
-        return homeUI;
-    }
-
-    /**
-     * @return the addRouteUI
-     */
-    public AddRouteUI getAddRouteUI() {
-        return addRouteUI;
     }
 }
