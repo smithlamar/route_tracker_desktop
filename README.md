@@ -11,4 +11,4 @@ This is a prototype. Critical elements such as testing, production quality orgin
 
 * Gson is used for JSON parsing. It is declared as dependency in the Maven POM.
 
-* Testing, what to say... I opted to forgo unit testing for the sake of building out this prototype as quickly as possible. Robustness was not the goal in this case. This was more an exercise and getting familiar with endpoints of the CTA's API and getting a general sense for general flow of the application.
+* Testing, what to say... I opted to forgo unit testing for the sake of building out this prototype as quickly as possible. Robustness was not the goal in this case. This was more an exercise in getting familiar with the endpoints of the CTA's API and getting a general sense for general flow of the application.
