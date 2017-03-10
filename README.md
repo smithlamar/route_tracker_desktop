@@ -1,4 +1,4 @@
-# route_tracker_desktop [PROTOTYPE]
+# route_tracker_desktop [Prototype]
 
 * The continuation of this project (ultimately in the form of an API that encapsulates the CTA's API) can be found at: https://github.com/smithlamar/route_tracker_api
 
