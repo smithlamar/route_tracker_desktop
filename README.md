@@ -6,7 +6,7 @@ _Overview_:
 Create custom routes of CTA buses and trains. View arrival times for each stop along your route all at once. This a prototype desktop version of the app. A lot of the findings from building this prototype will go toward building a backend service API on my server that interfaces with the CTA API as a mediator/adapter for a mobile android application.
 
 
-This is a prototype. Critical elements such as testing, production quality orginization of the codebase, and thorough commenting was deprioritized in the name of getting this prototype built as quikcly as possible. The danger of this less than stellar version becoming the foundation of the project is somewhat alleviated by creating the prototype for desktop instead of as a proper android application. Care will still need to be taken in the future to not end up with undesirable artifacts from this rushed version in the proper android implementation.
+This is a prototype. Critical elements such as testing, production quality orginization of the codebase, and thorough commenting was deprioritized in the name of getting this prototype built as quickly as possible. The danger of this less than stellar version becoming the foundation of the project is somewhat alleviated by creating the prototype for desktop instead of as a proper android application. Care will still need to be taken in the future to not end up with undesirable artifacts from this rushed version in the proper android implementation.
 
 * main() can be found in src/main/controller/
 
